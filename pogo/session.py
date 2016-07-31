@@ -24,7 +24,7 @@ from POGOProtos.Networking.Requests.Messages import SetFavoritePokemonMessage_pb
 # Load local
 import api
 from custom_exceptions import GeneralPogoException
-from inventory import Inventory, items
+from inventory import Inventory
 from location import Location
 from state import State
 

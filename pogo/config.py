@@ -14,5 +14,6 @@ recycleItemIDList = {	1 : 0,
 rarePokemonIDList = {}
 releaseCP = 1500
 releaseIV = 0.9
+radius = 10
 speed = 20 #m/s
 mode = "info"

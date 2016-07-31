@@ -57,7 +57,7 @@ class Inventory(object):
         self.pokedex = {}
         self.candies = {}
         self.stats = {}
-        self.party = []
+        self.pokemons = []
         self.eggs = []
         self.bag = {}
         for item in items:
@@ -82,7 +82,7 @@ class Inventory(object):
                 if pokemonData.is_egg:
                     self.eggs.append(pokemonData)
                 else:
-                    self.party.append(pokemonData)
+                    self.pokemons.append(pokemonData)
                 continue
 
             incubators = getattr(data, "egg_incubators", None)
@@ -112,10 +112,10 @@ class Inventory(object):
 
         s += "\n-- Candies:"
         for key in self.candies:
-            s += "\n\t{0}: {1}".format(pokedex[key], self.candies[key])
+            s += "\n\t{0}: {1}".format(key, self.candies[key])
 
-        s += "\n-- Party:"
-        for pokemon in self.party:
+        s += "\n-- Pokemons:"
+        for pokemon in self.pokemons:
             s += "\n\t{0}".format(str(pokemon).replace("\n", "\n\t"))
 
         s += "\n-- Eggs:"
@@ -124,10 +124,16 @@ class Inventory(object):
 
         s += "\n-- Bag:"
         for key in self.bag:
-            s += "\n\t{0}: {1}".format(items[key], self.bag[key])
+            s += "\n\t{0}: {1}".format(key, self.bag[key])
 
         s += "\n-- Incubators:"
         for incubator in self.incubators:
             s += "\n\t{0}".format(str(incubator).replace("\n", "\n\t"))
 
         return s
+        
+    def __getitem__(self, lookup):
+        if lookup in self.bag:
+            return self.bag[lookup]
+        else:
+            return 0

@@ -21,10 +21,10 @@ def getProfile(session):
 # those step in
 def sortCloseForts(session):
     # Sort nearest forts (pokestop)
-    logging.debug("Sorting Closest Poke Stop:")
+    logging.debug("Sorting Closest Poke Stop in %im", config.radius)
     latitude, longitude, _ = session.getCoordinates()
     ordered_forts = []
-    for cell in session.getMapCells(radius = 20):
+    for cell in session.getMapCells(radius = config.radius):
         for fort in cell.forts:
             dist = Location.getDistance(
                 latitude,

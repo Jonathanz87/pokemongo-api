@@ -40,11 +40,11 @@ def sortCloseForts(session):
 
 # Find the closest fort
 def findClosestFort(session):
-    logging.debug("Finding Nearest Poke Stop:")
+    logging.debug("Finding Nearest Poke Stop in %im", config.radius)
     latitude, longitude, _ = session.getCoordinates()
     closest_fort = None
     dist = float("inf")
-    for cell in session.getMapCells(radius = 20):
+    for cell in session.getMapCells(radius = config.radius):
         for fort in cell.forts:
             if fort.type == 1:
                 tempdist = Location.getDistance(
@@ -223,10 +223,9 @@ def catchStatusToStr(status):
 
 def findAllPokemon(session):
     logging.debug("Finding all pokemons...")
-    radius = 20
     pokemons = []
-    logging.debug("get cells in %im", radius)
-    for cell in session.getMapCells(radius=radius):
+    logging.debug("get cells in %im", config.radius)
+    for cell in session.getMapCells(radius = config.radius):
         for pokemon in cell.wild_pokemons:
             logging.debug("[%s]\tat (%f,%f) in cell(%d)",
                 pokemondic.indexToName(pokemon.pokemon_data.pokemon_id),

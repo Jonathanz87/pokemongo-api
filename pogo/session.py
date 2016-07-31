@@ -208,33 +208,109 @@ class PogoSession(object):
 
     # Hooks for those bundled in default
     # Getters
-    def getEggs(self):
-        self.getProfile()
-        return self._state.eggs
+    def getMapCells(self, radius = 10):
+        logging.debug("get Map Cells")
+        return self.getMapObjects(radius).map_cells
 
     def getInventory(self):
+        logging.debug("get Inventory")
         self.getProfile()
         return self.inventory
 
-    def getBadges(self):
+    def getEggs(self):
+        logging.debug("get Eggs")
         self.getProfile()
-        return self._state.badges
+        return self.inventory.eggs
 
-    def getDownloadSettings(self):
+    def getPokemons(self):
+        logging.debug("get Pokemons")
+        self.getProfile()
+        return self.inventory.pokemons
+
+    def getIncubators(self):
+        logging.debug("get Incubators")
+        self.getProfile()
+        return self.inventory.incubators
+
+    def getPokedex(self):
+        logging.debug("get Pokedex")
+        self.getProfile()
+        return self.inventory.pokedex
+
+    def getCandies(self):
+        logging.debug("get Candies")
+        self.getProfile()
+        return self.inventory.candies
+
+    def getStats(self):
+        logging.debug("get Stats")
+        self.getProfile()
+        return self.inventory.stats
+
+    def getBag(self):
+        logging.debug("get Bag")
+        self.getProfile()
+        return self.inventory.bag
+
+    def getSettings(self):
+        logging.debug("get Settings")
         self.getProfile()
         return self._state.settings
 
-    # Check, so we don't have to start another request
-    def checkEggs(self):
-        return self._state.eggs
+    def getPokemonByID(self, pokemon_id):
+        logging.debug("get Pokemon By ID")
+        self.getProfile()
+        for pokemon in self.getPokemons():
+            if(pokemon.id == pokemon_id):
+                return pokemon
+        return None
 
+    def getItenQuantity(self, item_id):
+        logging.debug("get Iten Quantity iten ID: %i", item_id)
+        self.getProfile()
+        if item_id in self.inventory.bag:
+            return self.inventory.bag[item_id]
+        return 0
+
+    # Check, so we don't have to start another request
     def checkInventory(self):
+        logging.debug("check Inventory")
         return self.inventory
 
+    def checkEggs(self):
+        logging.debug("check Eggs")
+        return self.inventory.eggs
+
+    def checkPokemons(self):
+        logging.debug("check Pokemons")
+        return self.inventory.pokemons
+
+    def checkIncubators(self):
+        logging.debug("check Incubators")
+        return self.inventory.incubators
+
+    def checkPokedex(self):
+        logging.debug("check Pokedex")
+        return self.inventory.pokedex
+
+    def checkCandies(self):
+        logging.debug("check Candies")
+        return self.inventory.candies
+
+    def checkStats(self):
+        logging.debug("check Stats")
+        return self.inventory.stats
+
+    def checkBag(self):
+        logging.debug("get Bag")
+        return self.inventory.bag
+
     def checkBadges(self):
+        logging.debug("check Badges")
         return self._state.badges
 
-    def checkDownloadSettings(self):
+    def checkSettings(self):
+        logging.debug("check Settings")
         return self._state.settings
 
     # Core api calls
@@ -493,7 +569,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+        time.sleep(1)
         # Parse
         self._state.recycle.ParseFromString(res.returns[0])
 
@@ -521,6 +597,14 @@ class PogoSession(object):
         # Return everything
         return self._state.incubator
 
+    # Wrap both for ease
+    # TODO: Should probably check for success
+    def encounterAndCatch(self, pokemon, pokeball=1, delay=2):
+        self.encounterPokemon(pokemon)
+        time.sleep(delay)
+        return self.catchPokemon(pokemon, pokeball)
+
+    # Give Pokemon a nickname
     def nicknamePokemon(self, pokemon, nickname):
         # Create request
         payload = [Request_pb2.Request(

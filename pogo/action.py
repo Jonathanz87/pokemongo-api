@@ -46,7 +46,8 @@ def findClosestFort(session):
     dist = float("inf")
     for cell in session.getMapCells(radius = config.radius):
         for fort in cell.forts:
-            if fort.type == 1:
+            if (fort.type == 1 and 
+                fort.cooldown_complete_timestamp_ms == 0):
                 tempdist = Location.getDistance(
                     latitude,
                     longitude,
@@ -54,7 +55,6 @@ def findClosestFort(session):
                     fort.longitude
                 )
                 if (tempdist is not 0 and 
-                    fort.cooldown_complete_timestamp_ms == 0 and 
                     tempdist < dist):
                     logging.debug("Poke Stop found in %dm:", tempdist)
                     dist = tempdist
@@ -296,7 +296,6 @@ def nicknamePokemonIV(session, pokemon):
     session.nicknamePokemon(pokemon, name)
     logging.info("Nickname [" + 
         pokemondic.indexToName(pokemon.pokemon_id) + "] to [" + name + "]")
-    time.sleep(1)
 
 def releasePokemonInCondition(session, pokemon, IV = 0, CP = 0, rareList = {}):
     logging.debug("release a Pokemon that (IV < %f and CP < %i)", IV, CP)
@@ -348,7 +347,6 @@ def evolveAllPokemon(session):
     inventory = session.checkInventory()
     for pokemon in inventory.pokemons:
         logging.info(session.evolvePokemon(pokemon))
-        time.sleep(1)
 
 # Basic bot
 def simpleBot(session, poko_session):

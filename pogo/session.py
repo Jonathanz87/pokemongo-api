@@ -28,6 +28,7 @@ from inventory import Inventory
 from location import Location
 from state import State
 
+import config
 import requests
 import logging
 import time
@@ -313,6 +314,12 @@ class PogoSession(object):
         logging.debug("check Settings")
         return self._state.settings
 
+    def checkItenQuantity(self, item_id):
+        logging.debug("check Iten Quantity iten ID: %i", item_id)
+        if item_id in self.inventory.bag:
+            return self.inventory.bag[item_id]
+        return 0
+
     # Core api calls
     # Get profile
     def getProfile(self):
@@ -323,7 +330,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+        time.sleep(config.delay)
         # Parse
         self._state.profile.ParseFromString(res.returns[0])
 
@@ -350,7 +357,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+        time.sleep(config.delay)
         # Parse
         self._state.mapObjects.ParseFromString(res.returns[0])
 
@@ -374,7 +381,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+#        time.sleep(config.delay)
         # Parse
         self._state.fortSearch.ParseFromString(res.returns[0])
 
@@ -416,7 +423,7 @@ class PogoSession(object):
                 player_longitude=self.location.longitude
             ).SerializeToString()
         )]
-
+#        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload)
 
@@ -442,7 +449,7 @@ class PogoSession(object):
                 normalized_hit_position=1.0
             ).SerializeToString()
         )]
-
+#        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload)
 
@@ -466,7 +473,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload, defaults=False)
-
+        time.sleep(config.delay)
         # Parse
         self._state.itemCapture.ParseFromString(res.returns[0])
 
@@ -484,7 +491,7 @@ class PogoSession(object):
                 pokemon_id = pokemon.id
             ).SerializeToString()
         )]
-
+        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload, defaults=False)
 
@@ -505,7 +512,7 @@ class PogoSession(object):
                 pokemon_id = pokemon.id
             ).SerializeToString()
         )]
-
+        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload, defaults=False)
 
@@ -525,7 +532,7 @@ class PogoSession(object):
                 pokemon_id=pokemon.id
             ).SerializeToString()
         )]
-
+        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload)
 
@@ -548,7 +555,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+        time.sleep(config.delay)
         # Parse
         self._state.release.ParseFromString(res.returns[0])
 
@@ -569,7 +576,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-        time.sleep(1)
+        time.sleep(config.delay)
         # Parse
         self._state.recycle.ParseFromString(res.returns[0])
 
@@ -590,7 +597,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload)
-
+#        time.sleep(config.delay)
         # Parse
         self._state.incubator.ParseFromString(res.returns[0])
 
@@ -601,7 +608,6 @@ class PogoSession(object):
     # TODO: Should probably check for success
     def encounterAndCatch(self, pokemon, pokeball=1, delay=2):
         self.encounterPokemon(pokemon)
-        time.sleep(delay)
         return self.catchPokemon(pokemon, pokeball)
 
     # Give Pokemon a nickname
@@ -614,7 +620,7 @@ class PogoSession(object):
                 nickname=nickname
             ).SerializeToString()
         )]
-
+        time.sleep(config.delay)
         # Send
         res = self.wrapAndRequest(payload)
 
@@ -638,7 +644,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload, defaults=False)
-
+        time.sleep(config.delay)
         # Parse
         self._state.favoritePokemon.ParseFromString(res.returns[0])
 
@@ -658,7 +664,7 @@ class PogoSession(object):
 
         # Send
         res = self.wrapAndRequest(payload, defaults=False)
-
+        time.sleep(config.delay)
         # Parse
         self._state.playerTeam.ParseFromString(res.returns[0])
 
